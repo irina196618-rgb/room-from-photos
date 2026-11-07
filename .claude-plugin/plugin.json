@@ -1,0 +1,1 @@
+{ "name": "room-from-photos", "version": "1.0.0", "description": "Photos of a room → interactive 3D dollhouse: sizes, drag furniture, repaint walls, layouts, will-it-fit check.", "author": { "name": "Stas Rise" }, "license": "MIT" }

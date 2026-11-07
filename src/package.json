@@ -1,0 +1,3 @@
+{ "name": "room-from-photos-engine", "private": true, "version": "1.0.0",
+  "scripts": { "build": "esbuild engine.js --bundle --minify --format=iife --outfile=../skills/room-from-photos/template/engine.js" },
+  "devDependencies": { "three": "0.170.0", "esbuild": "0.24.0" } }

@@ -1,0 +1,261 @@
+{
+ "name": "Спальня (пример)",
+ "room": {
+  "width": 380,
+  "depth": 340,
+  "height": 270,
+  "confidence": "medium"
+ },
+ "walls": {
+  "color": "#F1EEE8"
+ },
+ "floor": {
+  "type": "wood",
+  "color": "#B98A5E"
+ },
+ "openings": [
+  {
+   "wall": "N",
+   "type": "window",
+   "offset": 210,
+   "width": 130,
+   "height": 150,
+   "sill": 85,
+   "confidence": "medium"
+  },
+  {
+   "wall": "S",
+   "type": "door",
+   "offset": 280,
+   "width": 80,
+   "height": 205,
+   "confidence": "high"
+  }
+ ],
+ "items": [
+  {
+   "id": "bed",
+   "kind": "bed",
+   "label": "Кровать",
+   "w": 160,
+   "d": 205,
+   "h": 50,
+   "x": 130,
+   "z": 103,
+   "rot": 0,
+   "color": "#C9B9A6",
+   "confidence": "high"
+  },
+  {
+   "id": "ns1",
+   "kind": "nightstand",
+   "label": "Тумба",
+   "w": 45,
+   "d": 40,
+   "h": 50,
+   "x": 25,
+   "z": 20,
+   "rot": 0,
+   "confidence": "medium",
+   "color": "#D8C7B1"
+  },
+  {
+   "id": "wardrobe",
+   "kind": "wardrobe",
+   "label": "Шкаф",
+   "w": 150,
+   "d": 60,
+   "h": 220,
+   "x": 350,
+   "z": 140,
+   "rot": 90,
+   "confidence": "low"
+  },
+  {
+   "id": "desk",
+   "kind": "desk",
+   "label": "Стол",
+   "w": 120,
+   "d": 60,
+   "h": 75,
+   "x": 310,
+   "z": 30,
+   "rot": 0,
+   "confidence": "medium"
+  },
+  {
+   "id": "chair",
+   "kind": "chair",
+   "label": "Стул",
+   "w": 45,
+   "d": 48,
+   "h": 88,
+   "x": 290,
+   "z": 85,
+   "rot": 180,
+   "confidence": "medium"
+  },
+  {
+   "id": "plant",
+   "kind": "plant",
+   "label": "Растение",
+   "w": 45,
+   "d": 45,
+   "h": 120,
+   "x": 30,
+   "z": 300,
+   "rot": 0,
+   "confidence": "low"
+  },
+  {
+   "id": "rug",
+   "kind": "rug",
+   "label": "Ковёр",
+   "w": 160,
+   "d": 230,
+   "h": 1,
+   "x": 130,
+   "z": 200,
+   "rot": 0,
+   "color": "#D8C5AD",
+   "confidence": "low"
+  },
+  {
+   "id": "lamp",
+   "kind": "lamp",
+   "label": "Торшер",
+   "w": 40,
+   "d": 40,
+   "h": 160,
+   "x": 230,
+   "z": 20,
+   "rot": 0,
+   "confidence": "low"
+  }
+ ],
+ "layouts": [
+  {
+   "name": "Как сейчас",
+   "items": {
+    "bed": {
+     "x": 130,
+     "z": 103,
+     "rot": 0
+    },
+    "ns1": {
+     "x": 25,
+     "z": 20,
+     "rot": 0
+    },
+    "lamp": {
+     "x": 230,
+     "z": 20,
+     "rot": 0
+    },
+    "desk": {
+     "x": 310,
+     "z": 30,
+     "rot": 0
+    },
+    "chair": {
+     "x": 290,
+     "z": 85,
+     "rot": 180
+    },
+    "wardrobe": {
+     "x": 350,
+     "z": 140,
+     "rot": 90
+    },
+    "plant": {
+     "x": 30,
+     "z": 300,
+     "rot": 0
+    }
+   }
+  },
+  {
+   "name": "Больше пола",
+   "items": {
+    "bed": {
+     "x": 102.5,
+     "z": 80,
+     "rot": 270
+    },
+    "ns1": {
+     "x": 25,
+     "z": 185,
+     "rot": 0
+    },
+    "lamp": {
+     "x": 355,
+     "z": 240,
+     "rot": 0
+    },
+    "desk": {
+     "x": 270,
+     "z": 30,
+     "rot": 0
+    },
+    "chair": {
+     "x": 270,
+     "z": 85,
+     "rot": 180
+    },
+    "wardrobe": {
+     "x": 350,
+     "z": 140,
+     "rot": 90
+    },
+    "plant": {
+     "x": 30,
+     "z": 300,
+     "rot": 0
+    }
+   }
+  },
+  {
+   "name": "Зона работы",
+   "items": {
+    "bed": {
+     "x": 130,
+     "z": 103,
+     "rot": 0
+    },
+    "ns1": {
+     "x": 25,
+     "z": 20,
+     "rot": 0
+    },
+    "lamp": {
+     "x": 230,
+     "z": 20,
+     "rot": 0
+    },
+    "desk": {
+     "x": 30,
+     "z": 270,
+     "rot": 270
+    },
+    "chair": {
+     "x": 85,
+     "z": 270,
+     "rot": 90
+    },
+    "wardrobe": {
+     "x": 350,
+     "z": 140,
+     "rot": 90
+    },
+    "plant": {
+     "x": 290,
+     "z": 25,
+     "rot": 0
+    }
+   }
+  }
+ ],
+ "notes": [
+  "Ширина комнаты посчитана по двери 80 см. Глубину шкафа видно плохо — перемерь."
+ ]
+}

@@ -1,0 +1,2 @@
+{ "name": "stas-rise", "owner": { "name": "Stas Rise" },
+  "plugins": [ { "name": "room-from-photos", "source": "./", "description": "Photos of a room → interactive 3D dollhouse with sizes, draggable furniture, wall colours, layouts and a will-it-fit check." } ] }

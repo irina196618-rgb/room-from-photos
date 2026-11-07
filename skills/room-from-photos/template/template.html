@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__ · room-from-photos by Stas Rise</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Onest:wght@400;600;800&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+<style>
+  :root { --acc:#D97757; --acc2:#F4A27E; --bg:#14100d; --glass:rgba(28,22,18,.62); --line:rgba(217,119,87,.35); --txt:#f5efe8; --mute:#b9ab9d; }
+  * { box-sizing:border-box; }
+  html,body { margin:0; height:100%; background:var(--bg); color:var(--txt); font-family:Onest,system-ui,-apple-system,Segoe UI,sans-serif; overflow:hidden; }
+  body::before { content:""; position:fixed; inset:0; background:radial-gradient(60% 50% at 70% 30%, rgba(217,119,87,.20), transparent 70%), radial-gradient(50% 40% at 20% 80%, rgba(244,162,126,.10), transparent 70%); pointer-events:none; }
+  #app { position:fixed; inset:0; }
+  #app canvas { display:block; touch-action:none; }
+  .labels { position:absolute; inset:0; pointer-events:none; }
+  .panel { position:fixed; background:var(--glass); backdrop-filter:blur(14px) saturate(1.2); -webkit-backdrop-filter:blur(14px); border:1px solid var(--line); border-radius:16px; padding:14px; box-shadow:0 10px 40px rgba(0,0,0,.35); }
+  header.panel { top:14px; left:14px; padding:12px 16px; }
+  header h1 { margin:0; font-size:18px; font-weight:800; }
+  header p { margin:2px 0 0; font-size:12px; color:var(--mute); }
+  #tools { top:14px; right:14px; width:270px; display:flex; flex-direction:column; gap:12px; max-height:calc(100% - 28px); overflow:auto; }
+  h3 { margin:0 0 8px; font-size:11px; letter-spacing:0; text-transform:uppercase; color:var(--acc2); font-weight:800; }
+  .row { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  button { font:inherit; color:var(--txt); background:rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.12); border-radius:10px; padding:7px 10px; cursor:pointer; font-size:13px; transition:background .2s, border-color .2s, transform .15s; }
+  button:hover { border-color:var(--acc); } button:active { transform:scale(.97); }
+  button.on, .chip.on { background:var(--acc); border-color:var(--acc); color:#1a120d; font-weight:600; }
+  .sw { width:30px; height:30px; padding:0; border-radius:50%; background:var(--c); border:2px solid rgba(255,255,255,.25); }
+  .sw:hover { transform:scale(1.12); border-color:#fff; }
+  #wall-pick { font-size:12px; color:var(--mute); min-height:16px; margin-top:6px; }
+  input, select { font:inherit; font-size:13px; color:var(--txt); background:rgba(0,0,0,.25); border:1px solid rgba(255,255,255,.14); border-radius:9px; padding:7px 8px; width:100%; }
+  .grid3 { display:grid; grid-template-columns:repeat(3,1fr); gap:6px; margin-top:6px; }
+  .grid3 label { font-size:11px; color:var(--mute); }
+  #fit-go { width:100%; margin-top:8px; background:var(--acc); color:#1a120d; font-weight:800; border:0; }
+  #fit-out { font-size:13px; margin-top:8px; line-height:1.35; } #fit-out.ok { color:#9fe0a6; } #fit-out.bad { color:#ff8f7a; }
+  #sel { bottom:14px; left:50%; transform:translate(-50%, 20px); opacity:0; pointer-events:none; display:flex; gap:12px; align-items:center; transition:.25s; }
+  #sel.on { opacity:1; transform:translate(-50%,0); pointer-events:auto; }
+  #sel .n { font-weight:800; } #sel .s { font-size:12px; color:var(--mute); }
+  #sizes-panel { bottom:14px; left:14px; width:300px; max-height:46vh; overflow:auto; display:none; }
+  #sizes-panel.on { display:block; }
+  #sizes-toggle { position:fixed; bottom:14px; left:14px; z-index:2; }
+  #sizes-panel.on + #sizes-toggle { left:326px; }
+  table { width:100%; border-collapse:collapse; font-size:12px; } td { padding:5px 4px; border-bottom:1px solid rgba(255,255,255,.07); } tr { cursor:pointer; }
+  td:nth-child(2) { color:var(--mute); white-space:nowrap; }
+  i { font-style:normal; font-size:10px; padding:2px 6px; border-radius:20px; white-space:nowrap; } i.hi { background:rgba(120,200,130,.2); color:#9fe0a6; } i.mid { background:rgba(244,162,126,.18); color:var(--acc2); } i.lo { background:rgba(255,90,70,.2); color:#ff8f7a; }
+  #notes { font-size:11px; color:var(--mute); margin-top:8px; line-height:1.4; }
+  .tag { background:var(--glass); backdrop-filter:blur(8px); border:1px solid var(--acc); border-radius:10px; padding:5px 9px; font-size:12px; text-align:center; white-space:nowrap; transform:translateY(-6px); }
+  .tag b { display:block; font-size:13px; } .tag span { color:var(--acc2); }
+  .dim.big { font-size:13px; padding:3px 8px; }
+  .dim { background:var(--acc); color:#1a120d; font-weight:800; font-size:11px; padding:2px 6px; border-radius:6px; white-space:nowrap; }
+  #toast { position:fixed; top:16px; left:50%; transform:translate(-50%,-30px); opacity:0; background:#2a1d16; border:1px solid var(--acc); border-radius:12px; padding:9px 14px; font-size:13px; transition:.25s; pointer-events:none; }
+  #toast.on { opacity:1; transform:translate(-50%,0); }
+  footer { position:fixed; right:16px; bottom:12px; font-size:11px; color:var(--mute); opacity:.8; }
+  footer b { color:var(--acc2); }
+  body.noui .panel, body.noui #sizes-toggle, body.noui footer, body.noui #toast { display:none !important; }
+  #tools-toggle { display:none; position:fixed; right:8px; bottom:14px; z-index:3; background:var(--acc); color:#1a120d; font-weight:800; border:0; }
+  @media (max-width:760px) { #tools-toggle { display:block; } #tools { display:none; top:auto; bottom:60px; right:8px; left:8px; width:auto; max-height:52vh; z-index:4; } #tools.open { display:flex; } #sel { bottom:60px; width:calc(100% - 16px); } #sizes-panel.on + #sizes-toggle { left:14px; } #sizes-panel { bottom:60px; max-height:50vh; z-index:4; } header.panel { left:8px; top:8px; } #sizes-panel { width:auto; right:8px; left:8px; } footer { display:none; } }
+</style>
+</head>
+<body>
+<div id="app"></div>
+<header class="panel"><h1 id="title"></h1><p id="subtitle"></p></header>
+<button id="tools-toggle">Инструменты</button>
+<aside id="tools" class="panel">
+  <div>
+    <h3>Вид</h3>
+    <div class="row"><button id="top">План сверху</button></div>
+  </div>
+  <div>
+    <h3>Добавить мебель</h3>
+    <div class="row" style="flex-wrap:nowrap"><select id="catalog"></select><button id="add-go" style="white-space:nowrap">+ Добавить</button></div>
+  </div>
+  <div>
+    <h3>Планировки</h3>
+    <div class="row" id="layouts"></div>
+  </div>
+  <div>
+    <h3>Цвет стен</h3>
+    <div class="row" style="margin-bottom:8px"><button data-mode="all" class="on">Все стены</button><button data-mode="one">Одна стена</button></div>
+    <div class="row" id="swatches"></div>
+    <div id="wall-pick"></div>
+  </div>
+  <div>
+    <h3>Влезет ли?</h3>
+    <div class="row" style="flex-wrap:nowrap"><input id="fit-name" placeholder="Название" value="Диван"><select id="fit-kind" style="width:110px"><option value="sofa">диван</option><option value="bed">кровать</option><option value="wardrobe">шкаф</option><option value="desk">стол</option><option value="dresser">комод</option><option value="box">другое</option></select></div>
+    <div class="grid3"><label>Ширина, см<input id="fit-w" type="number" value="220"></label><label>Глубина<input id="fit-d" type="number" value="95"></label><label>Высота<input id="fit-h" type="number" value="85"></label></div>
+    <select id="fit-rep" style="margin-top:6px"><option value="">к свободной стене</option></select>
+    <button id="fit-go">Проверить</button>
+    <div id="fit-out"></div>
+  </div>
+</aside>
+<div id="sel" class="panel"><div><div class="n"></div><div class="s"></div></div><button class="rot2">↻ Повернуть</button><button class="dup">Копия</button><button class="rm">Убрать</button></div>
+<div id="sizes-panel" class="panel"><h3>Размеры, которые угадал Claude</h3><table><tbody id="sizes"></tbody></table><div id="notes"></div></div>
+<button id="sizes-toggle">Размеры</button>
+<div id="toast"></div>
+<footer>Тащи мебель мышкой · <b>room-from-photos by Stas Rise</b></footer>
+<script id="room-data" type="application/json">__ROOM_JSON__</script>
+<script>__ENGINE_JS__</script>
+</body>
+</html>
