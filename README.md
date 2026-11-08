@@ -19,12 +19,12 @@
 
 **Claude Code**
 ```
-/plugin marketplace add OWNER/room-from-photos
+/plugin marketplace add irina196618-rgb/room-from-photos
 /plugin install room-from-photos@stas-rise
 ```
 или
 ```
-npx skills@latest add OWNER/room-from-photos
+npx skills@latest add irina196618-rgb/room-from-photos
 ```
 
 **claude.ai / приложение Claude** — скачай папку `skills/room-from-photos` архивом (.zip) и загрузи её в настройках Claude в разделе со скиллами.
@@ -51,4 +51,4 @@ npx skills@latest add OWNER/room-from-photos
 Stas Rise · ИИ без воды · Telegram: @stas_rise
 
 ## English
-Send Claude 2–4 phone photos of a room and get an interactive 3D dollhouse in a single HTML file: estimated sizes with confidence, draggable furniture with collisions, wall colours, 3 layouts, a "will it fit?" check and a top-down plan. Install: `/plugin marketplace add OWNER/room-from-photos` → `/plugin install room-from-photos@stas-rise`. MIT.
+Send Claude 2–4 phone photos of a room and get an interactive 3D dollhouse in a single HTML file: estimated sizes with confidence, draggable furniture with collisions, wall colours, 3 layouts, a "will it fit?" check and a top-down plan. Install: `/plugin marketplace add irina196618-rgb/room-from-photos` → `/plugin install room-from-photos@stas-rise`. MIT.
