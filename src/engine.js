@@ -156,6 +156,16 @@ function buildOpening(g, id, o) {
     bar(0.035, h, 0.05, x0 + w / 2, y0 + h / 2, fz);
     const glass = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshPhysicalMaterial({ color: '#cfe6ff', roughness: 0.05, transmission: 0.6, transparent: true, opacity: 0.35 }));
     glass.position.set(x0 + w / 2, y0 + h / 2, fz); parts.add(glass);
+    if (o.curtains !== false) {
+      const cm = new THREE.MeshStandardMaterial({ color: o.curtainColor || '#E8DCCB', roughness: 1, side: THREE.DoubleSide });
+      const top = Math.min(H - 0.06, y0 + h + 0.28), bot = Math.max(0.02, y0 - 0.55), ch = top - bot, pw = Math.min(0.55, w * 0.32);
+      const zc = inner === 0 ? -0.07 : T + 0.07;
+      for (const side of [-1, 1]) {
+        const cx0 = side < 0 ? x0 - 0.12 : x0 + w + 0.12 - pw;
+        for (let f = 0; f < 6; f++) { const fold = new THREE.Mesh(new THREE.CylinderGeometry(pw / 12 + 0.012, pw / 12 + 0.012, ch, 10, 1, true, 0, Math.PI), cm); fold.position.set(cx0 + (pw / 6) * (f + 0.5), bot + ch / 2, zc); fold.rotation.y = inner === 0 ? Math.PI : 0; fold.castShadow = true; parts.add(fold); }
+      }
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, w + 0.5, 10), mat('#3a3330', 0.4, 0.6)); rod.rotation.z = Math.PI / 2; rod.position.set(x0 + w / 2, top + 0.02, zc); parts.add(rod);
+    }
     const wl = new THREE.PointLight('#ffe9cc', 1.4 * w * h, 4, 1.8); wl.position.set(x0 + w / 2, y0 + h * 0.6, inner === 0 ? -0.45 : T + 0.45); parts.add(wl);
     const sky = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ color: '#ffe2bd' }));
     sky.position.set(x0 + w / 2, y0 + h / 2, inner === 0 ? T + 0.001 : -0.001);
@@ -272,6 +282,18 @@ BUILDERS.kitchen = (g, w, d, h, c) => {
 BUILDERS.fridge = (g, w, d, h, c) => { const col = c.color || '#e9ebee'; const b = rbox(w, h, d, col, 0.04, 0.3); b.position.y = h / 2; g.add(b); const ln = new THREE.Mesh(new THREE.BoxGeometry(w - 0.04, 0.006, 0.004), mat(shade(col, 0.7))); ln.position.set(0, h * 0.62, d / 2 + 0.001); g.add(ln); for (const y of [h * 0.45, h * 0.8]) { const hd = new THREE.Mesh(new THREE.BoxGeometry(0.02, 0.28, 0.03), mat('#a7abb0', 0.3, 0.8)); hd.position.set(w / 2 - 0.08, y, d / 2 + 0.02); g.add(hd); } };
 BUILDERS.radiator = (g, w, d, h, c) => { const n = Math.max(4, Math.round(w / 0.08)); for (let i = 0; i < n; i++) { const f = rbox(w / n - 0.012, h, d, c.color || '#f2f2f2', 0.012, 0.4); f.position.set(-w / 2 + (w / n) * (i + 0.5), h / 2 + 0.12, 0); g.add(f); } };
 BUILDERS.mirror = (g, w, d, h, c) => { const fr = rbox(w, h, Math.max(d, 0.03), c.color || '#2b2b2b', 0.01, 0.4); fr.position.y = h / 2; g.add(fr); const m = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.06, h - 0.06), new THREE.MeshStandardMaterial({ color: '#dfe8ee', roughness: 0.02, metalness: 1 })); m.position.set(0, h / 2, Math.max(d, 0.03) / 2 + 0.002); g.add(m); };
+BUILDERS.art = (g, w, d, h, c) => {
+  const fr = rbox(w, h, Math.max(d, 0.03), c.frame || '#2b2420', 0.006, 0.5); fr.position.y = h / 2; g.add(fr);
+  const cv = document.createElement('canvas'); cv.width = 256; cv.height = 256; const x = cv.getContext('2d');
+  const pal = c.palette || ['#F1E6D8', '#D97757', '#A9B79A', '#3E4A57', '#E8C07D'];
+  x.fillStyle = pal[0]; x.fillRect(0, 0, 256, 256);
+  x.fillStyle = pal[1]; x.beginPath(); x.arc(170, 110, 60, 0, Math.PI * 2); x.fill();
+  x.fillStyle = pal[2]; x.fillRect(30, 140, 150, 90);
+  x.fillStyle = pal[3]; x.beginPath(); x.moveTo(20, 230); x.quadraticCurveTo(128, 150, 236, 230); x.fill();
+  x.fillStyle = pal[4]; x.fillRect(60, 40, 40, 40);
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace;
+  const pic = new THREE.Mesh(new THREE.PlaneGeometry(w - 0.08, h - 0.08), new THREE.MeshStandardMaterial({ map: t, roughness: 0.8 })); pic.position.set(0, h / 2, Math.max(d, 0.03) / 2 + 0.002); g.add(pic);
+};
 BUILDERS.cabinet = BUILDERS.dresser; BUILDERS.bookcase = BUILDERS.shelf; BUILDERS.other = BUILDERS.box;
 
 const items = new Map();
@@ -284,7 +306,7 @@ function makeItem(spec) {
   const it = { kind: 'box', rot: 0, confidence: 'medium', collide: true, ...spec };
   it.rot = ((Math.round((it.rot || 0) / 90) * 90) % 360 + 360) % 360;
   if (it.kind === 'rug' || it.elevation > 0) it.collide = spec.collide ?? false;
-  if (spec.fixed === undefined) it.fixed = it.kind === 'radiator' || it.kind === 'kitchen' || it.elevation > 0;
+  if (spec.fixed === undefined) it.fixed = it.kind === 'radiator' || it.kind === 'kitchen' || it.kind === 'art' || it.elevation > 0;
   const g = new THREE.Group();
   const inner = new THREE.Group();
   (BUILDERS[it.kind] || BUILDERS.box)(inner, it.w * CM, it.d * CM, it.h * CM, it);
@@ -539,8 +561,8 @@ function toggleTop(on = !topView) {
 }
 
 // ---------- интро: стены растут, мебель падает ----------
-const t0 = performance.now(); const INTRO = !/[?&]intro=0/.test(location.search);
-Object.values(walls).forEach((w) => (w.scale.y = INTRO ? 0.001 : 1));
+let introT0 = performance.now(); const t0 = introT0; const INTRO = !/[?&]intro=0/.test(location.search);
+Object.values(walls).forEach((w) => { w.scale.y = INTRO ? 0.001 : 1; w.userData.grown = !INTRO; });
 let k = 0; items.forEach((it) => { it.drop = INTRO ? t0 + 900 + k * 110 : 0; if (INTRO) it.group.position.y = 1.4; k++; });
 if (INTRO) flyTo(HOME, center, 2200); else camera.position.copy(HOME);
 const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
@@ -553,7 +575,7 @@ function frame() {
   requestAnimationFrame(frame);
   const now = performance.now(); const dt = Math.min(clock.getDelta(), 0.05);
   // интро стен
-  Object.values(walls).forEach((w, i) => { if (w.userData.grown) return; const t = Math.min(Math.max((now - t0 - i * 160) / 1200, 0), 1); w.scale.y = Math.max(0.001, 1 - Math.pow(1 - t, 3)); if (t >= 1) { w.scale.y = 1; w.userData.grown = true; } });
+  Object.values(walls).forEach((w, i) => { if (w.userData.grown) return; const t = Math.min(Math.max((now - introT0 - i * 160) / 1200, 0), 1); w.scale.y = Math.max(0.001, 1 - Math.pow(1 - t, 3)); if (t >= 1) { w.scale.y = 1; w.userData.grown = true; } });
   // камера
   if (camTween) { const t = Math.min((now - camTween.t0) / camTween.dur, 1), e = ease(t); camera.position.lerpVectors(camTween.p0, camTween.p1, e); controls.target.lerpVectors(camTween.c0, camTween.c1, e); if (t >= 1) camTween = null; }
   if (autoRotate && !camTween && !drag) { const a = dt * 0.12; const off = camera.position.clone().sub(controls.target); off.applyAxisAngle(new THREE.Vector3(0, 1, 0), a); camera.position.copy(controls.target).add(off); }
@@ -657,11 +679,18 @@ document.querySelector('#sel .rot2').addEventListener('click', rotateSelected);
 document.querySelector('#sel .dup').addEventListener('click', duplicateSel);
 setTimeout(() => ui.toast('Тащи мебель мышкой или пальцем'), INTRO ? 3200 : 600);
 
+function replayIntro() {
+  const now = performance.now(); let k = 0;
+  Object.values(walls).forEach((w) => { w.scale.y = 0.001; w.userData.grown = false; });
+  introT0 = now;
+  items.forEach((it) => { if (it.removed) return; it.drop = now + 700 + k * 110; it.group.position.y = 1.4; k++; });
+}
 // API для записи видео и автотестов
 window.RFP = {
   select: (id) => select(id ? items.get(id) : null), move: (id, x, z) => tryMove(items.get(id), x, z), rotate: (id) => { select(items.get(id)); rotateSelected(); },
   paint: (hex, ids) => paintWalls(hex, ids), layout: applyLayout, fit: fitCheck, top: toggleTop, spin: (on = true) => (autoRotate = on),
-  add: addItem, dup: duplicateSel,
+  add: addItem, dup: duplicateSel, replay: replayIntro, camera, center, controls, renderer, sun,
+  look: (px, py, pz, tx, ty, tz) => { camTween = null; camera.position.set(px, py, pz); controls.target.set(tx, ty, tz); },
   fly: (x, y, z, tx = W / 2, ty = 0.6, tz = D / 2, dur = 1200) => flyTo(new THREE.Vector3(x, y, z), new THREE.Vector3(tx, ty, tz), dur),
   screen: (id) => { const it = items.get(id); const v = it.group.position.clone(); v.y += it.h * CM * 0.6; v.project(camera); const r = renderer.domElement.getBoundingClientRect(); return { x: r.left + (v.x + 1) / 2 * r.width, y: r.top + (1 - v.y) / 2 * r.height }; },
   items: () => [...items.values()].map((i) => ({ id: i.id, x: i.target.x, z: i.target.z, rot: i.target.rot })), W: R.width, D: R.depth,

@@ -51,7 +51,8 @@
   #toast.on { opacity:1; transform:translate(-50%,0); }
   footer { position:fixed; right:16px; bottom:12px; font-size:11px; color:var(--mute); opacity:.8; }
   footer b { color:var(--acc2); }
-  body.noui .panel, body.noui #sizes-toggle, body.noui footer, body.noui #toast { display:none !important; }
+  body.noui, html:has(body.noui) { background:transparent; } body.noui::before { display:none; }
+  body.noui .panel, body.noui #sizes-toggle, body.noui #tools-toggle, body.noui footer, body.noui #toast { display:none !important; }
   #tools-toggle { display:none; position:fixed; right:8px; bottom:14px; z-index:3; background:var(--acc); color:#1a120d; font-weight:800; border:0; }
   @media (max-width:760px) { #tools-toggle { display:block; } #tools { display:none; top:auto; bottom:60px; right:8px; left:8px; width:auto; max-height:52vh; z-index:4; } #tools.open { display:flex; } #sel { bottom:60px; width:calc(100% - 16px); } #sizes-panel.on + #sizes-toggle { left:14px; } #sizes-panel { bottom:60px; max-height:50vh; z-index:4; } header.panel { left:8px; top:8px; } #sizes-panel { width:auto; right:8px; left:8px; } footer { display:none; } }
 </style>

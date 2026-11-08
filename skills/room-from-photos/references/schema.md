@@ -42,6 +42,7 @@
 | `wallNames` | необязательно: свои названия стен в интерфейсе |
 | `openings[].offset` | для N и S — от левой стены W; для W и E — от дальней стены N |
 | `openings[].sill` | высота подоконника (только окна) |
+| `openings[].curtains` | шторы у окна (по умолчанию есть; `false` — убрать), `curtainColor` — цвет |
 | `items[].w / d / h` | ширина (вдоль задней стороны) / глубина (от задней стороны к лицу) / высота |
 | `items[].x / z` | центр основания |
 | `items[].rot` | к какой стене повёрнута задняя сторона: 0 → N, 90 → E, 180 → S, 270 → W. Только эти 4 значения. Вплотную к стене: rot 0 → z = d/2; 180 → z = depth − d/2; 90 → x = width − d/2; 270 → x = d/2 |
@@ -51,7 +52,7 @@
 | `confidence` | `high` / `medium` / `low` — в таблице «low» помечается «перемерь» |
 | `layouts` | 3 варианта; в каждом — новые `x`, `z`, `rot` для нужных предметов |
 
-`kind`: bed, sofa, armchair, wardrobe, dresser, nightstand, cabinet, desk, table, chair, tv, shelf, bookcase, plant, rug, lamp, kitchen, fridge, radiator, mirror, box (всё остальное; `other` = box).
+`kind`: bed, sofa, armchair, wardrobe, dresser, nightstand, cabinet, desk, table, chair, tv, shelf, bookcase, plant, rug, lamp, kitchen, fridge, radiator, mirror, art (картина на стене, с elevation), box (всё остальное; `other` = box).
 
 `openings[].type`: `door` или `window`. Балконная дверь в пол — `door`.
 

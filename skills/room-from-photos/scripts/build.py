@@ -12,7 +12,7 @@ import argparse, json, sys, pathlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 KINDS = {"bed", "sofa", "armchair", "wardrobe", "dresser", "nightstand", "cabinet", "desk", "table", "chair",
-         "tv", "shelf", "bookcase", "plant", "rug", "lamp", "box", "other", "kitchen", "fridge", "radiator", "mirror"}
+         "tv", "shelf", "bookcase", "plant", "rug", "lamp", "box", "other", "kitchen", "fridge", "radiator", "mirror", "art"}
 errors, warns = [], []
 
 
@@ -125,7 +125,7 @@ def check(data):
     layouts = data.get("layouts") or []
     if not layouts:
         warns.append("нет layouts — кнопок планировок не будет")
-    movable = [i for i, it in byid.items() if collides(it)]
+    movable = [i for i, it in byid.items() if collides(it) and not it.get("fixed", it.get("kind") in ("radiator", "kitchen"))]
     for L in layouts:
         name = f"планировка «{L.get('name', '?')}»"
         pos = {}
